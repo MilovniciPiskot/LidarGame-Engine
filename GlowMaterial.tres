@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://by2ixjnad8njj"]
+
+[resource]
+depth_draw_mode = 2
+no_depth_test = true
+diffuse_mode = 1
+specular_mode = 2
+disable_ambient_light = true
+disable_fog = true
+emission = Color(0.321569, 0.811765, 1, 1)
