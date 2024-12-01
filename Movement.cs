@@ -53,7 +53,6 @@ public partial class Movement : CharacterBody3D
 		if (inputDir.Y != 0)
 			RotateY(inputDir.Y * -mouse_sens);
 	}
-
     // public override void _Input(InputEvent @event)
     // {
     //     base._Input(@event);

@@ -7,4 +7,5 @@ diffuse_mode = 1
 specular_mode = 2
 disable_ambient_light = true
 disable_fog = true
-emission = Color(0.321569, 0.811765, 1, 1)
+emission = Color(0.792598, 0.934828, 1, 1)
+emission_energy_multiplier = 0.25

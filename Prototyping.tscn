@@ -1,7 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://6c3twc7vahyg"]
+[gd_scene load_steps=16 format=3 uid="uid://6c3twc7vahyg"]
 
 [ext_resource type="Script" path="res://Movement.cs" id="1_7cxid"]
 [ext_resource type="Script" path="res://LidarGun.cs" id="2_b5f03"]
+[ext_resource type="ArrayMesh" uid="uid://h7yiw6sls7su" path="res://TraceModel.res" id="2_cy4gk"]
+[ext_resource type="Script" path="res://ScanTrails.cs" id="2_h7vax"]
 [ext_resource type="Script" path="res://PointCloud.cs" id="3_k48ic"]
 [ext_resource type="Material" uid="uid://by2ixjnad8njj" path="res://GlowMaterial.tres" id="5_u8h3k"]
 
@@ -22,9 +24,10 @@ sky = SubResource("Sky_2y0mi")
 ambient_light_source = 1
 ambient_light_color = Color(1, 1, 1, 1)
 ambient_light_energy = 0.37
+reflected_light_source = 1
 tonemap_mode = 2
 glow_enabled = true
-glow_intensity = 2.0
+glow_intensity = 1.3
 glow_bloom = 0.7
 
 [sub_resource type="Shader" id="Shader_o2tnt"]
@@ -63,7 +66,7 @@ void vertex() {
 
 void fragment() {
 	vec2 base_uv = UV;
-	
+
 	ALBEDO = albedo.rgb;
 
 	// Emission Operator: Add
@@ -92,6 +95,10 @@ transform_format = 1
 use_colors = true
 mesh = SubResource("PointMesh_7aeqw")
 
+[sub_resource type="MultiMesh" id="MultiMesh_kn166"]
+transform_format = 1
+mesh = ExtResource("2_cy4gk")
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_1eb2w"]
 
 [node name="Node3D" type="Node3D"]
@@ -109,6 +116,10 @@ environment = SubResource("Environment_xnj55")
 gi_mode = 0
 multimesh = SubResource("MultiMesh_mthw8")
 script = ExtResource("3_k48ic")
+
+[node name="ScanTrails" type="MultiMeshInstance3D" parent="."]
+multimesh = SubResource("MultiMesh_kn166")
+script = ExtResource("2_h7vax")
 
 [node name="Enviroment" type="Node" parent="."]
 
@@ -182,6 +193,7 @@ gi_mode = 0
 calculate_tangents = false
 use_collision = true
 size = Vector3(1, 2.18799, 5)
+metadata/pointColor = Color(0.745098, 0.709804, 0, 1)
 
 [node name="Wall8" type="CSGBox3D" parent="Enviroment"]
 transform = Transform3D(-4.37114e-08, 0, 3, 0, 1, 0, -1, 0, -1.31134e-07, -31, 3, 15)
@@ -211,6 +223,8 @@ shape = SubResource("CapsuleShape3D_1eb2w")
 [node name="Camera3D" type="Camera3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0.79653, 0.604599, 0, -0.604599, 0.79653, 0, 1, 0)
 current = true
+fov = 65.0
+far = 100.0
 
 [node name="LidarGun" type="Node3D" parent="CharacterBody3D/Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.385, -0.17488, -0.605554)
