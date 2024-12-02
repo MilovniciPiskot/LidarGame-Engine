@@ -3,11 +3,11 @@ using System;
 
 public partial class DebugManager : Node3D
 {
-	private DirectionalLight3D light; 
+	private WorldEnvironment enviro; 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
-		light = GetNode<DirectionalLight3D>("../DirectionalLight3D");
+		enviro = GetNode<WorldEnvironment>("../WorldEnvironment");
 		ToggleLight();
 	}
 
@@ -24,6 +24,9 @@ public partial class DebugManager : Node3D
 	}
 
 	void ToggleLight(){
-		light.Visible = !light.Visible;
+		if (enviro.Environment.AmbientLightSource == Godot.Environment.AmbientSource.Disabled)
+			enviro.Environment.AmbientLightSource = Godot.Environment.AmbientSource.Sky;
+		else
+			enviro.Environment.AmbientLightSource = Godot.Environment.AmbientSource.Disabled;
 	}
 }

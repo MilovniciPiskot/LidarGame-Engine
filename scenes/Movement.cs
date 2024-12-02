@@ -12,6 +12,7 @@ public partial class Movement : CharacterBody3D
     public override void _Ready()
     {
         camera = GetNode<Node3D>("Camera3D");
+		Input.MouseMode = Input.MouseModeEnum.Captured;
     }
 
     public override void _PhysicsProcess(double delta)
