@@ -4,7 +4,7 @@ using System;
 public partial class Movement : CharacterBody3D
 {
 	[Export] public float Speed = 5.0f;
-	[Export] public float mouseSensitivity = 0.3f;
+	[Export] public float mouseSensitivity = 0.6f;
 	public Node3D camera;
 
 	private Vector2 cameraInput = Vector2.Zero;
@@ -12,19 +12,13 @@ public partial class Movement : CharacterBody3D
     public override void _Ready()
     {
         camera = GetNode<Node3D>("Camera3D");
-		Input.MouseMode = Input.MouseModeEnum.Captured;
+		Input.MouseMode = Input.MouseModeEnum.Visible;
     }
 
     public override void _PhysicsProcess(double delta)
 	{
 		RotateView();
 		Vector3 velocity = Velocity;
-
-		// Add the gravity.
-		if (!IsOnFloor())
-		{
-			velocity += GetGravity() * (float)delta;
-		}
 
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.

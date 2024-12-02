@@ -19,7 +19,7 @@ public partial class DebugManager : Node3D
 		}
 
 		string fps = Engine.GetFramesPerSecond().ToString();
-		string particleCount = "0";
+		string particleCount = PointCloudManager.instance.particleCount.ToString();
 		GetWindow().Title = "LidarGame FPS: " + fps + " | PC: " + particleCount; 
 	}
 
