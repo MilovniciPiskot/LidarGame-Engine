@@ -78,7 +78,7 @@ public partial class PointCloudManager : Node3D
 		material.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded;
 		material.FixedSize = true;
 		material.UsePointSize = true;
-		material.PointSize = 2;
+		material.PointSize = 2.5f;
 
 		return material;
 	}
