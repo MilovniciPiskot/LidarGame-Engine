@@ -51,7 +51,7 @@ public partial class Movement : CharacterBody3D
     {
         if (@event is InputEventMouseMotion mouseMotion){
 			cameraInput = mouseMotion.Relative;
-		}
+		}	
     }
 
 	void RotateView(){

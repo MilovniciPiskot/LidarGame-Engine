@@ -4,6 +4,7 @@ public partial class Scanner : Node3D
 {
 	private CharacterBody3D characterBody;
 	const float RAY_LENGTH = 50000;
+	const float INTERACT_REACH = 2f;
 
 	const float angleWidth = 100;
 	const float angleHeight = 80;
@@ -35,7 +36,14 @@ public partial class Scanner : Node3D
 				isFocused = true;
 			}
 		}
+
+		if(@event.IsActionPressed("Interact")){
+			// Shoot interact ray
+			//TODO: Show hand as a crosshair or smth
+			InteractRay();
+		}
     }
+
     public override void _PhysicsProcess(double delta)
 	{
 		if (isScanning = currentScanIndex <= angleWidth * angleHeight ){
@@ -61,6 +69,24 @@ public partial class Scanner : Node3D
 
 		if (Input.IsActionJustPressed("scanSpecial")){
 			ScanTopdown();
+		}
+	}
+
+	void InteractRay(){
+		Vector3 direction = -GlobalBasis.Column2;
+
+		var spaceState = GetWorld3D().DirectSpaceState;
+		var query = PhysicsRayQueryParameters3D.Create(GlobalPosition, GlobalPosition + direction * INTERACT_REACH);
+		query.Exclude = new Array<Rid> { characterBody.GetRid() };
+    	var result = spaceState.IntersectRay(query);
+
+		// No valid  hits
+		if (result.Count <= 0)
+			return;
+
+		Node parent = ((Node)result["collider"]).GetParent();
+		if (parent is IInteractable interactable){
+			interactable.Interact();
 		}
 	}
 
@@ -103,6 +129,11 @@ public partial class Scanner : Node3D
 			color = (PointCloud.ColorEnum)(int)parent.GetMeta("SurfaceType");
 		}
 
-		PointCloud.instance.AddPoint((Vector3)result["position"], color);
+		ulong key = 0;
+		if(parent is Movable){
+			key = parent.GetInstanceId();
+		}
+
+		PointCloud.instance.AddPoint((Vector3)result["position"], color, key);
 	}
 }
