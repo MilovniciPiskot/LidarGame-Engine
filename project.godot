@@ -15,11 +15,6 @@ run/main_scene="res://scenes/prototyping_scene.tscn"
 config/features=PackedStringArray("4.3", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
-[display]
-
-window/quality/msaa_3d=0
-window/quality/screen_space_aa=0
-
 [dotnet]
 
 project/assembly_name="LidarGame"
@@ -76,6 +71,10 @@ Interact={
 [layer_names]
 
 3d_physics/layer_5="ignore_movement"
+
+[physics]
+
+3d/run_on_separate_thread=true
 
 [rendering]
 

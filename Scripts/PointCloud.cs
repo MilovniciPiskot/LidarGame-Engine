@@ -5,6 +5,7 @@ public partial class PointCloud : Node3D
 {
 	public static PointCloud instance;
 	[Export] public uint particleCount = 0;
+	[Export] public float particleSize = 2.2f;
 	const int MAX_SIZE = 100_000;
 	private Dictionary<ulong, Array<ulong>> clouds = new Dictionary<ulong, Array<ulong>>();
 
@@ -39,7 +40,7 @@ public partial class PointCloud : Node3D
 			cloud = GetCloud(colorEnum, id);
 		}
 		
-		// If the cloud is being deleted than ignore adding points;
+		// If the cloud is being deleted then ignore adding points;
 		if (cloud == null)
 			return;
 
@@ -47,7 +48,7 @@ public partial class PointCloud : Node3D
 		cloud.SetInstanceTransform(count, new Transform3D(Basis.Identity, position));
 	}
 
-	ulong CreateMultiMesh(Color color){
+	ulong CreateMultiMesh(Color color, float pointSize){
 		MultiMeshInstance3D instance = new MultiMeshInstance3D();
 		MultiMesh multiMesh = new MultiMesh();
 		
@@ -56,7 +57,7 @@ public partial class PointCloud : Node3D
 		multiMesh.VisibleInstanceCount = 0;
 
 		var pointMesh = new PointMesh();
-		pointMesh.Material = CreatePointMaterial(color);
+		pointMesh.Material = CreatePointMaterial(color, pointSize);
 		multiMesh.Mesh = pointMesh;
 
 		instance.Multimesh = multiMesh;
@@ -65,7 +66,7 @@ public partial class PointCloud : Node3D
 		return instance.GetInstanceId();
 	}
 
-	Material CreatePointMaterial(Color color){
+	public Material CreatePointMaterial(Color color, float pointSize){
 		StandardMaterial3D material = new StandardMaterial3D();
 
 		material.CullMode = BaseMaterial3D.CullModeEnum.Disabled;
@@ -78,9 +79,12 @@ public partial class PointCloud : Node3D
 		material.SpecularMode = BaseMaterial3D.SpecularModeEnum.Disabled;
 		material.BillboardMode = BaseMaterial3D.BillboardModeEnum.Particles;
 		material.ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded;
-		material.FixedSize = true;
+		//material.FixedSize = true;
 		material.UsePointSize = true;
-		material.PointSize = 2.5f;
+		material.PointSize = pointSize;
+		material.DistanceFadeMode = BaseMaterial3D.DistanceFadeModeEnum.PixelDither;
+		material.DistanceFadeMaxDistance = 7;
+		material.DistanceFadeMinDistance = 11;
 
 		return material;
 	}
@@ -98,7 +102,7 @@ public partial class PointCloud : Node3D
 				return Colors.Green;
 			
 			default:
-				return Colors.White;
+				return Colors.WhiteSmoke;
 		}
 	}
 
@@ -116,7 +120,7 @@ public partial class PointCloud : Node3D
 
 		MultiMeshInstance3D instance = (MultiMeshInstance3D)InstanceFromId(last);
 		if (instance.IsQueuedForDeletion()){
-			GD.Print("A");
+			GD.Print("Point is queued for deletion");
 			return null;
 		}
 
@@ -126,7 +130,7 @@ public partial class PointCloud : Node3D
 	void AddCloud(ColorEnum color, ulong id){
 		ulong key = id == 0 ? (ulong)color : id;
 
-		var cloud = CreateMultiMesh(GetColorFromEnum(color));
+		var cloud = CreateMultiMesh(GetColorFromEnum(color), color == ColorEnum.WHITE ? 2.0f : particleSize);
 
 		if (!clouds.ContainsKey(key))
 			clouds[key] = new Array<ulong>();

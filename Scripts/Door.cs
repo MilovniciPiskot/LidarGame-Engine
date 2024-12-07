@@ -37,7 +37,7 @@ public partial class Door : Movable, IInteractable
 			Close();
 	}
 
-    public override void _PhysicsProcess(double delta)
+    public override void _PhysicsProcess(double delta)	
     {
 		if (!isInteractable) {
 			// Animate
@@ -51,7 +51,7 @@ public partial class Door : Movable, IInteractable
 			
 			// Set the rotation
 			RotateY(Mathf.DegToRad(change));
-			UpdateMovement();
+			UpdateMovementWithEffect();
 		}
     }
 

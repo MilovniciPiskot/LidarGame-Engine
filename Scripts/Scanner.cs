@@ -1,9 +1,10 @@
+using System.Reflection;
 using Godot;
 using Godot.Collections;
 public partial class Scanner : Node3D 
 {
-	private CharacterBody3D characterBody;
-	const float RAY_LENGTH = 50000;
+	public CharacterBody3D characterBody;
+	const float RAY_LENGTH = 15;
 	const float INTERACT_REACH = 2f;
 
 	const float angleWidth = 100;
@@ -16,11 +17,15 @@ public partial class Scanner : Node3D
 	[Export] private float scanDensity = 1.33337f;
 	[Export] private int scanSpread = 20;
 
+	public static Scanner instance = null;
+
     public override void _Ready()
     {
-        characterBody = GetNode("../../CharacterBody3D") as CharacterBody3D;	
+        //characterBody = GetNode("../") as CharacterBody3D;	
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		isFocused = true;
+		if (instance == null)
+			instance = this;
     }
 
     public override void _Input(InputEvent @event)
@@ -35,12 +40,6 @@ public partial class Scanner : Node3D
 				Input.MouseMode = Input.MouseModeEnum.Captured;
 				isFocused = true;
 			}
-		}
-
-		if(@event.IsActionPressed("Interact")){
-			// Shoot interact ray
-			//TODO: Show hand as a crosshair or smth
-			InteractRay();
 		}
     }
 
@@ -70,6 +69,12 @@ public partial class Scanner : Node3D
 		if (Input.IsActionJustPressed("scanSpecial")){
 			ScanTopdown();
 		}
+
+		if(Input.IsActionPressed("Interact")){
+			// Shoot interact ray
+			//TODO: Show hand as a crosshair or smth
+			InteractRay();
+		}
 	}
 
 	void InteractRay(){
@@ -91,7 +96,7 @@ public partial class Scanner : Node3D
 	}
 
 	public void ScanCircle(float spread){
-		for(int i = 0; i < scanSpeed/2; i++){
+		for(int i = 0; i < scanSpeed/3; i++){
 			var random = new RandomNumberGenerator();
 			float radius = spread * Mathf.Sqrt(random.Randf());
 			float theta = random.Randf() * Mathf.Tau;

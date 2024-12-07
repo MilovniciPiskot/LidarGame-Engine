@@ -9,12 +9,13 @@ public partial class Movement : CharacterBody3D
 
 	private Vector2 cameraInput = Vector2.Zero;
 	private float cameraAngle = 0f;
-    public override void _Ready()
-    {
-        camera = GetNode<Node3D>("Camera3D");
-    }
+	public override void _Ready()
+	{
+		camera = GetNode<Node3D>("Camera3D");
+		((Scanner)camera).characterBody = this;
+	}
 
-    public override void _PhysicsProcess(double delta)
+	public override void _PhysicsProcess(double delta)
 	{
 		if (((Scanner)camera).isFocused)
 			HandleMovement();
@@ -27,7 +28,7 @@ public partial class Movement : CharacterBody3D
 		// Get the input direction and handle the movement/deceleration.
 		// As good practice, you should replace UI actions with custom gameplay actions.
 		Vector2 inputDir = Input.GetVector("left", "right", "forward", "backward");
-		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
+		Vector3 direction = (Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		
 		// Apply slow while line scanning
 		direction *=  (float)(((Scanner)camera).isScanning ? 0.06f : 1.0f);
@@ -47,12 +48,12 @@ public partial class Movement : CharacterBody3D
 		MoveAndSlide();
 	}
 
-    public override void _Input(InputEvent @event)
-    {
-        if (@event is InputEventMouseMotion mouseMotion){
+	public override void _Input(InputEvent @event)
+	{
+		if (@event is InputEventMouseMotion mouseMotion){
 			cameraInput = mouseMotion.Relative;
 		}	
-    }
+	}
 
 	void RotateView(){
 		const float MaxCameraAngle = 90;
