@@ -3,7 +3,6 @@ using Godot;
 
 public partial class RotatingLight : LightCloud
 {
-	[Export] int scanCount = 50;
 	[Export] float spread = 35;
 	[Export] float rotationSpeed = 40;
     public override void _Ready()
